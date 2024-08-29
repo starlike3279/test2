@@ -1,30 +1,38 @@
 package org.example.article;
 
+import java.util.Map;
+
 public class Article {
     private int id;
-    private String title = "";
-    private String content = "";
+    private String subject;
+    private String content;
 
-    public Article(int id, String title, String content) {
+    Article(int id, String subject, String content) {
         this.id = id;
-        this.title = title;
+        this.subject = subject;
         this.content = content;
     }
 
-    public int getId() {
+    Article(Map<String, Object> row) {
+        this.id = (int) row.get("id");
+        this.subject = (String) row.get("subject");
+        this.content = (String) row.get("content");
+    }
+
+    int getId() {
         return this.id;
     }
 
-    public String getSubject() {
-        return this.title;
+    String getSubject() {
+        return this.subject;
     }
 
-    public String getContent() {
+    String getContent() {
         return this.content;
     }
 
-    public void setSubject(String title) {
-        this.title = title;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public void setContent(String content) {

@@ -1,14 +1,25 @@
 package org.example;
 
 import org.example.article.ArticleController;
+import org.example.db.DBConnection;
 import org.example.system.SystemController;
 
+import java.util.List;
+import java.util.Map;
+
 public class App {
-    // CRUD 동작
     ArticleController articleController;
     SystemController systemController;
 
+
     App() {
+        DBConnection.DB_NAME = "proj1";
+        DBConnection.DB_PORT = 3306;
+        DBConnection.DB_USER = "root";
+        DBConnection.DB_PASSWORD = "";
+        // DB 연결
+        Container.getDBConnection().connect();
+
         articleController = new ArticleController();
         systemController = new SystemController();
     }
@@ -16,24 +27,25 @@ public class App {
     public void run() {
         System.out.println("== 게시판 앱 ==");
         while (true) {
-            System.out.println("명령) ");
+            System.out.print("명령) ");
             String command = Container.getSc().nextLine().trim();
+            // 커맨드에 입력한 내용을 actionCode, idx로 분류해서 필드로 저장
             Request request = new Request(command);
 
-            if (command.equals("종료")) {
+            if (request.getActionCode().equals("종료")) {
+                systemController.exit();
                 break;
-            } else if (command.equals("등록")) {
+            } else if (request.getActionCode().equals("등록")) {
                 articleController.write();
-            } else if (command.equals("목록")) {
+            } else if (request.getActionCode().equals("목록")) {
                 articleController.list();
-            } else if (command.startsWith("삭제")) {
+            } else if (request.getActionCode().startsWith("삭제")) {
                 articleController.delete(request);
-            } else if (command.startsWith("수정")) {
+            } else if (request.getActionCode().startsWith("수정")) {
                 articleController.modify(request);
-            } else {
-                System.out.println("잘못된 입력했습니다. 다시 입력해주세요.");
             }
         }
-        systemController.exit();
     }
+
+
 }
